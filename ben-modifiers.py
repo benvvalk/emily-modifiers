@@ -110,7 +110,7 @@ def lookup(chord):
         raise KeyError
 
     # extract relevant parts of the stroke
-    firstMatch = re.fullmatch(r'([#STKPWHR]*)([AO]*)([*-]*)([EU]*)([FPLT]*)', stroke)
+    firstMatch = re.fullmatch(r'#([STKPWHR]*)([AO]*)([*-]*)([EU]*)([FPLT]*)', stroke)
 
     # error out if there are no matches found
     if firstMatch is None:
