@@ -105,6 +105,10 @@ def lookup(chord):
         stroke = ["#"] + stroke
         stroke = "".join(stroke)
 
+    # require the number key to be pressed
+    if not numberFlag:
+        raise KeyError
+
     # extract relevant parts of the stroke
     firstMatch = re.fullmatch(r'([#STKPWHR]*)([AO]*)([*-]*)([EU]*)([FRPB]*)', stroke)
 
