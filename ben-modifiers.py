@@ -95,6 +95,7 @@ def lookup(chord):
     # I copied this code block from:
     # https://github.com/EPLHREU/emily-symbols/blob/main/emily-symbols.py
 
+    numberFlag = False
     if any(k in stroke for k in "1234506789"):  # if chord contains a number
         stroke = list(stroke)
         numbers = ["O", "S", "T", "P", "H", "A", "F", "P", "L", "T"]
