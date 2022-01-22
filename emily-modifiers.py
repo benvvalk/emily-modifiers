@@ -86,6 +86,29 @@ def lookup(chord):
         raise KeyError
     assert len(chord) <= LONGEST_KEY
 
+    # Normalize chords that use the number key. In Plover's dictionary
+    # format, chords that contain the number key are represented with
+    # numbers instead of letters wherever possible. For example, the
+    # chord "#STW-F" would be represented as "12W-6". (The "W" key
+    # has no corresponding number so it is left unchanged.)
+    #
+    # Normalizing the number chords here makes it possible to process
+    # number chords without having to implement special cases
+    # in the code.
+    #
+    # I copied this code block from:
+    # https://github.com/EPLHREU/emily-symbols/blob/main/emily-symbols.py
+
+    if any(k in stroke for k in "1234506789"):  # if chord contains a number
+        stroke = list(stroke)
+        numbers = ["O", "S", "T", "P", "H", "A", "F", "P", "L", "T"]
+        for key in range(len(stroke)):
+            if stroke[key].isnumeric():
+                stroke[key] = numbers[int(stroke[key])]  # set number key to letter
+                numberFlag = True
+        stroke = ["#"] + stroke
+        stroke = "".join(stroke)
+
     # extract relevant parts of the stroke
     firstMatch = re.fullmatch(r'([#STKPWHR]*)([AO]*)([*-]*)([EU]*)([FRPB]*)([LGTSDZ]*)', stroke)
 
