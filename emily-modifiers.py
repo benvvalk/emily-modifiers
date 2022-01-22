@@ -110,7 +110,7 @@ def lookup(chord):
         raise KeyError
 
     # extract relevant parts of the stroke
-    firstMatch = re.fullmatch(r'([#STKPWHR]*)([AO]*)([*-]*)([EU]*)([FRPB]*)', stroke)
+    firstMatch = re.fullmatch(r'([#STKPWHR]*)([AO]*)([*-]*)([EU]*)([FPLT]*)', stroke)
 
     # error out if there are no matches found
     if firstMatch is None:
@@ -205,14 +205,14 @@ def lookup(chord):
     # may need to reorder?
     modKeys = modifiers
     mods = []
-    if "R" in modKeys:
-        mods.append("shift")
     if "F" in modKeys:
-        mods.append("control")
-    if "B" in modKeys:
         mods.append("alt")
     if "P" in modKeys:
         mods.append("super")
+    if "L" in modKeys:
+        mods.append("control")
+    if "T" in modKeys:
+        mods.append("shift")
 
     # apply those modifiers
     combo = character
