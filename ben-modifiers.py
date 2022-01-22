@@ -89,14 +89,42 @@ def lookup(chord):
     # has no corresponding number so it is left unchanged.)
     #
     # Normalizing the number chords here makes it possible to process
-    # number chords without having to implement special cases
-    # in the code.
+    # number chords without having to handle them as a special case.
     #
-    # I copied this code block from:
+    # Based on a code block from:
     # https://github.com/EPLHREU/emily-symbols/blob/main/emily-symbols.py
 
     numberFlag = False
     if any(k in stroke for k in "1234506789"):  # if chord contains a number
+
+        # insert dash between left and right keys to ensure
+        # translated chord is never ambiguous
+        if stroke.find('-') == -1 and stroke.find('*') == -1:
+
+            # Find first key pressed with right hand (if any).
+            #
+            # Note: It's preferable not to match any right-hand
+            # keys except EU6789 here because the R key
+            # appears on both sides of the keyboard and is
+            # very tricky to deal with. (The P/S/T keys
+            # also appear on both sides of the keyboard, but
+            # in those cases the left/right keys are disambiguated
+            # by the fact that they are given in their number forms.)
+            #
+            # If any key except EU6789 on the right side is pressed,
+            # the dash will not be inserted and the chord
+            # will not match the `re.fullmatch` call below. That's
+            # fine though, because the presence of other right-hand keys
+            # means it's not a valid modifier chord and
+            # we don't want to handle it with this dictionary
+            # anyway.
+
+            match = re.search(r'[EU6789]', stroke)
+            if match is not None:
+                index = match.start()
+                stroke = stroke[:index] + '-' + stroke[index:]
+
+        # replace numbers with letters
         stroke = list(stroke)
         numbers = ["O", "S", "T", "P", "H", "A", "F", "P", "L", "T"]
         for key in range(len(stroke)):
@@ -111,7 +139,7 @@ def lookup(chord):
         raise KeyError
 
     # extract relevant parts of the stroke
-    firstMatch = re.fullmatch(r'#([STKPWHR]*)([AO]*)([*-]*)([EU]*)([FPLT]*)', stroke)
+    firstMatch = re.fullmatch(r'#([STKPWHR]*)([AO]*)([*-])([EU]*)([FPLT]+)', stroke)
 
     # error out if there are no matches found
     if firstMatch is None:
