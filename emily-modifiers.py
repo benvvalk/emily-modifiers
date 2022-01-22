@@ -1,10 +1,6 @@
 # Emily's Modifier Dictionary
 import re
 
-# define your ender here
-uniqueEnders = ["LTZ"]
-
-
 LONGEST_KEY = 1
 
 # fingerspelling dictionary entries for relevant theories 
@@ -110,13 +106,13 @@ def lookup(chord):
         stroke = "".join(stroke)
 
     # extract relevant parts of the stroke
-    firstMatch = re.fullmatch(r'([#STKPWHR]*)([AO]*)([*-]*)([EU]*)([FRPB]*)([LGTSDZ]*)', stroke)
+    firstMatch = re.fullmatch(r'([#STKPWHR]*)([AO]*)([*-]*)([EU]*)([FRPB]*)', stroke)
 
     # error out if there are no matches found
     if firstMatch is None:
         raise KeyError
     # name the relevant extracted parts of the regex
-    (key, vowel1, seperator, vowel2, modifiers, ender) = firstMatch.groups()
+    (key, vowel1, seperator, vowel2, modifiers) = firstMatch.groups()
 
     # if the user doesn't specify a modifier, then error out as the dictionary has no use otherwise
     if modifiers is None:
@@ -125,9 +121,6 @@ def lookup(chord):
     # combine the relevant parts of the stroke into a nice name
     pattern = key + vowel1 + vowel2
 
-    if ender not in uniqueEnders:
-        raise KeyError
- 
     if pattern == "":
         # just modifiers pressed on their own, used a lot in windows apparently
         character = ""
